@@ -1,6 +1,6 @@
 defaults:
   - image_generator: sdxl_lightning
-  - dataset_generator: simple_prompts
+  - dataset_generator: contexts_prompts
 
 data_dir: ${root_dir}/dataset
 root_dir:  ${hydra:runtime.cwd}
