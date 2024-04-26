@@ -60,6 +60,8 @@ class ContextsPromptsDatasetGenerator:
             ]
         }
         """
+        adjectifs = {"crémeux": "creamy", "frais": "fresh", "affiné": "aged", "doux": "mild", "fort": "strong", 
+        }
         contextes = {
             "sur une planche en bois": "on a wooden board",
             "avec des olives": "with olives",
@@ -67,6 +69,9 @@ class ContextsPromptsDatasetGenerator:
             "sur une table rustique": "on a rustic table",
             "avec du pain frais": "with fresh bread",
             "dans une boîte en bois avec étiquette": "in a wooden box with a label",
+            "sur fond uni": "on a plain background",
+            "dans un emballage en papier": "in a paper wrapping",
+            "dans un emballage en plastique": "in a plastic wrapping",
         }
 
         fromages = [
@@ -80,12 +85,12 @@ class ContextsPromptsDatasetGenerator:
         ]
 
         cheese_prompts = {}
-
-        for fromage in fromages:
-            cheese_prompts[fromage] = []
-            for context_fr, context_en in contextes.items():
-                prompt = f"An image of {fromage} cheese {context_en}"
-                cheese_prompts[fromage].append({"prompt": prompt, "num_images": 1})
+        for adjectif in adjectifs:
+            for fromage in fromages:
+                cheese_prompts[fromage] = []
+                for context_fr, context_en in contextes.items():
+                    prompt = f"An image of {adjectif} {fromage} cheese {context_en}"
+                    cheese_prompts[fromage].append({"prompt": prompt, "num_images": 1})
 
 
 
