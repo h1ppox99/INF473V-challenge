@@ -1,5 +1,5 @@
 defaults:
-  - image_generator: sdxl_lightning
+  - image_generator: sdxl_turbo
   - dataset_generator: contexts_prompts
 
 data_dir: ${root_dir}/dataset
