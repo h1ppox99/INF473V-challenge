@@ -2,7 +2,7 @@ from pathlib import Path
 from tqdm import tqdm
 
 
-class DatasetGenerator:
+class ContextsPromptsDatasetGenerator:
     def __init__(
         self,
         generator,
@@ -60,9 +60,36 @@ class DatasetGenerator:
             ]
         }
         """
-        
+        contextes = {
+            "sur une planche en bois": "on a wooden board",
+            "avec des olives": "with olives",
+            "avec du vin": "with a glass of wine",
+            "sur une table rustique": "on a rustic table",
+            "avec du pain frais": "with fresh bread",
+            "dans une boîte en bois avec étiquette": "in a wooden box with a label",
+        }
 
-        return NotImplementedError
+        fromages = [
+            "BRIE DE MELUN", "CAMEMBERT", "EPOISSES", "FOURME D’AMBERT", "RACLETTE",
+            "MORBIER", "SAINT-NECTAIRE", "POULIGNY SAINT-PIERRE", "ROQUEFORT", "COMTÉ",
+            "CHÈVRE", "PECORINO", "NEUFCHATEL", "CHEDDAR", "BÛCHETTE DE CHÈVRE",
+            "PARMESAN", "SAINT-FÉLICIEN", "MONT D’OR", "STILTON", "SCARMOZA", "CABECOU",
+            "BEAUFORT", "MUNSTER", "CHABICHOU", "TOMME DE VACHE", "REBLOCHON", "EMMENTAL",
+            "FETA", "OSSAU-IRATY", "MIMOLETTE", "MAROILLES", "GRUYÈRE", "MOTHAIS",
+            "VACHERIN", "MOZZARELLA", "TÊTE DE MOINES", "FROMAGE FRAIS"
+        ]
+
+        cheese_prompts = {}
+
+        for fromage in fromages:
+            cheese_prompts[fromage] = []
+            for context_fr, context_en in contextes.items():
+                prompt = f"An image of {fromage} cheese {context_en}"
+                cheese_prompts[fromage].append({"prompt": prompt, "num_images": 1})
+
+
+
+        return cheese_prompts
 
     def save_images(self, images, label, image_id_0):
         output_path = Path(self.output_dir) / label

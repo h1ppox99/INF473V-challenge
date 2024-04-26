@@ -1,4 +1,4 @@
-from .base import DatasetGenerator
+from .contexts import DatasetGenerator
 
 
 class SimplePromptsDatasetGenerator(DatasetGenerator):
