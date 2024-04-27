@@ -1,8 +1,8 @@
 import torch
 from diffusers import (
-    StableDiffusionTurboPipeline,
-    UNet2DTurboConditionModel,
-    EulerDiscreteScheduler,
+    StableDiffusionXLPipeline,
+    UNet2DConditionModel,
+    LMSDiscreteScheduler,
 )
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
@@ -14,20 +14,21 @@ class SDTurboGenerator:
     def __init__(
         self,
     ):
-        base = "stabilityai/stable-diffusion-turbo-base-1.0"
-        repo = "ByteDance/SDTurbo-Lightning"
-        ckpt = "sdturbo_lightning_4step_unet.safetensors"
+        base = "stabilityai/stable-diffusion-xl-base-1.0"
+        repo = "ByteDance/SDXL-Turbo"
+        ckpt = "sdxl_turbo_4step_unet.safetensors"
 
-        unet = UNet2DTurboConditionModel.from_config(base, subfolder="unet").to(
+        unet = UNet2DConditionModel.from_config(base, subfolder="unet").to(
             device, torch.float16
         )
         unet.load_state_dict(load_file(hf_hub_download(repo, ckpt), device=device))
-        self.pipe = StableDiffusionTurboPipeline.from_pretrained(
+        self.pipe = StableDiffusionXLPipeline.from_pretrained(
             base, unet=unet, torch_dtype=torch.float16, variant="fp16"
         ).to(device)
-        self.pipe.scheduler = EulerDiscreteScheduler.from_config(
+        # Turbo typically uses LMSDiscreteScheduler
+        self.pipe.scheduler = LMSDiscreteScheduler.from_config(
             self.pipe.scheduler.config, timestep_spacing="trailing"
-            )
+        )
         self.pipe.set_progress_bar_config(disable=True)
         self.num_inference_steps = 4
         self.guidance_scale = 0

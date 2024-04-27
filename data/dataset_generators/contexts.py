@@ -39,6 +39,7 @@ class ContextsPromptsDatasetGenerator:
                 pbar.close()
 
     def create_prompts(self, labels_names):
+        # print(labels_names[0])
         """
         Prompts should be a dictionary with the following structure:
         {
@@ -74,19 +75,11 @@ class ContextsPromptsDatasetGenerator:
             "dans un emballage en plastique": "in a plastic wrapping",
         }
 
-        fromages = [
-            "BRIE DE MELUN", "CAMEMBERT", "EPOISSES", "FOURME D’AMBERT", "RACLETTE",
-            "MORBIER", "SAINT-NECTAIRE", "POULIGNY SAINT-PIERRE", "ROQUEFORT", "COMTÉ",
-            "CHÈVRE", "PECORINO", "NEUFCHATEL", "CHEDDAR", "BÛCHETTE DE CHÈVRE",
-            "PARMESAN", "SAINT-FÉLICIEN", "MONT D’OR", "STILTON", "SCARMOZA", "CABECOU",
-            "BEAUFORT", "MUNSTER", "CHABICHOU", "TOMME DE VACHE", "REBLOCHON", "EMMENTAL",
-            "FETA", "OSSAU-IRATY", "MIMOLETTE", "MAROILLES", "GRUYÈRE", "MOTHAIS",
-            "VACHERIN", "MOZZARELLA", "TÊTE DE MOINES", "FROMAGE FRAIS"
-        ]
+        
 
         cheese_prompts = {}
-        for adjectif in adjectifs:
-            for fromage in fromages:
+        for adj_fr,adjectif in adjectifs.items():
+            for fromage in labels_names:
                 cheese_prompts[fromage] = []
                 for context_fr, context_en in contextes.items():
                     prompt = f"An image of {adjectif} {fromage} cheese {context_en}"
