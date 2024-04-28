@@ -62,6 +62,7 @@ class ContextsPromptsDatasetGenerator:
         """
         adjectifs = {"crémeux": "creamy", "frais": "fresh", "affiné": "aged", "doux": "mild", "fort": "strong", 
         }
+
         contextes = {
             "sur une planche en bois": "on a wooden board",
             "avec des olives": "with olives",
@@ -74,24 +75,45 @@ class ContextsPromptsDatasetGenerator:
             "dans un emballage en plastique": "in a plastic wrapping",
         }
 
-        fromages = [
-            "BRIE DE MELUN", "CAMEMBERT", "EPOISSES", "FOURME D’AMBERT", "RACLETTE",
-            "MORBIER", "SAINT-NECTAIRE", "POULIGNY SAINT-PIERRE", "ROQUEFORT", "COMTÉ",
-            "CHÈVRE", "PECORINO", "NEUFCHATEL", "CHEDDAR", "BÛCHETTE DE CHÈVRE",
-            "PARMESAN", "SAINT-FÉLICIEN", "MONT D’OR", "STILTON", "SCARMOZA", "CABECOU",
-            "BEAUFORT", "MUNSTER", "CHABICHOU", "TOMME DE VACHE", "REBLOCHON", "EMMENTAL",
-            "FETA", "OSSAU-IRATY", "MIMOLETTE", "MAROILLES", "GRUYÈRE", "MOTHAIS",
-            "VACHERIN", "MOZZARELLA", "TÊTE DE MOINES", "FROMAGE FRAIS"
-        ]
+        lumieres = {
+            "avec une lumière naturelle": "under a natural light",
+            "avec une lumière artificielle": "under a artificial light",
+            "avec un éclairage modulé": "in modulated lighting",
+            "avec un éclairage scénique": "in stage lighting",
+            "avec une lumière contrôlée": "under a controlled light",
+        }
+
+        fonds = {
+            "sur fond blanc": "on a white background",
+            "sur fond noir": "on a black background",
+            "dans un paysage naturel": "in a natural landscape",
+            "avec un horizon dégagé": "with a clear horizon",
+            "dans une pièce éclairée": "in a well-lit room",
+            "contre un mur de briques": "against a brick wall"
+        }
+
+        styles_visuels = {
+            "Minimaliste": "minimalist",
+            "Vintage": "vintage",
+            "Rustique": "rustic",
+            "Promotionnel": "promotional",
+            "Commercial": "commercial",
+            "Décontracté": "casual"
+        }
+
+
 
         cheese_prompts = {}
-        for adjectif in adjectifs:
-            for fromage in fromages:
-                cheese_prompts[fromage] = []
-                for context_fr, context_en in contextes.items():
-                    prompt = f"An image of {adjectif} {fromage} cheese {context_en}"
-                    cheese_prompts[fromage].append({"prompt": prompt, "num_images": 1})
-
+        
+        for fromage in labels_names:
+            cheese_prompts[fromage] = []
+            for _, context in contextes.items(): 
+                for _,adjectif in adjectifs.items():
+                    for _,style in styles_visuels.items():
+                        for _,fond in fonds.items():
+                            for _,lumiere in lumieres.items():
+                                prompt = f"An image of {adjectif} {fromage} cheese {context} {fond} in a {style} style {lumiere}"
+                                cheese_prompts[fromage].append({"prompt": prompt, "num_images": 1})
 
 
         return cheese_prompts
