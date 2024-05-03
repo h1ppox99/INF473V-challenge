@@ -18,6 +18,7 @@ def curate(cfg):
     text_inputs = torch.cat([clip.tokenize(f"a photo of a {label} cheese") for label in labels]).to(device)
 
     # Process images within each subfolder, corresponding to their label
+    nb_wrong = 0
     for label in labels:
         subfolder_path = os.path.join(cfg.images_dir, label)
         image_files = [f for f in os.listdir(subfolder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
@@ -32,12 +33,22 @@ def curate(cfg):
 
                 # Calculate similarities and determine the best label
                 similarities = torch.matmul(text_features, image_features.T).squeeze(0)
-                best_label_idx = similarities.argmax().item()
-                best_label = labels[best_label_idx]
-
+                #choose the 10 best predictions
+                best_label_idx = similarities.argsort(descending=True)[:10]
             # Log the results
-            if best_label != label:
-                print(f"Image {image_file} in folder '{label}' is best described by label '{best_label}'.")
+            if not(label in [labels[i] for i in best_label_idx]):
+                nb_wrong += 1
+                # print(f"Image {image_file} in folder '{label}' is best described by label '{best_label}'.")
+            else: #copy the image to the curated folder /dataset/train/curated/
+                # Create the curated folder if it doesn't exist
+                curated_folder = os.path.join(cfg.data_dir, 'train', 'curated', label)
+                os.makedirs(curated_folder, exist_ok=True)
+                os.rename(image_path, os.path.join(curated_folder, image_file))
+                #copy the file to the curated folder
+    print(f"Number of wrong predictions: {nb_wrong}")
+                
+
+                
 
 if __name__ == "__main__":
     curate()

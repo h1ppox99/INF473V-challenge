@@ -6,3 +6,4 @@ einops
 diffusers
 transformers
 pandas
+clip
