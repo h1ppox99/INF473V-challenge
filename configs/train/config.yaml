@@ -1,6 +1,6 @@
 defaults:
   - model: dinov2
-  - dataset: simple_prompts
+  - dataset: contexts
   - optim: adamw
   - loss_fn: cross_entropy
 
