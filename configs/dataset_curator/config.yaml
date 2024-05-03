@@ -1,6 +1,7 @@
 # parameters for the curator
+root_dir:  ${hydra:runtime.cwd}
 data_dir: ${root_dir}/dataset
-images_dir: ${train_path}
+images_dir: ${data_dir}/train/contexts_prompts
 labels_file: ${root_dir}/list_of_cheese.txt
 batch_size: 32
 
