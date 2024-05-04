@@ -2,8 +2,11 @@
 root_dir:  ${hydra:runtime.cwd}
 data_dir: ${root_dir}/dataset
 images_dir: ${data_dir}/train/contexts_prompts
+# images_dir: ${data_dir}/val
 labels_file: ${root_dir}/list_of_cheese.txt
 batch_size: 32
+cheese_description: ${root_dir}/cheese_description.yaml
+nb_list: 10
 
 hydra:
   run:

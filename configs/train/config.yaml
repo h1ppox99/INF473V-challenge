@@ -1,13 +1,13 @@
 defaults:
   - model: dinov2
-  - dataset: augmented
+  - dataset: contexts_augment
   - optim: adamw
   - loss_fn: cross_entropy
 
 epochs: 20
 
 datamodule:
-  _target_: data.datamodule.DataModule
+  _target_: data.datamoduleaugment.DataModuleAugment # modifier
   train_dataset_path: ${dataset.train_path}
   real_images_val_path: ${dataset.real_images_val_path}
   train_transform: ${dataset.train_transform}

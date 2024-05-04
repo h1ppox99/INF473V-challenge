@@ -55,3 +55,6 @@ python create_submition.py experiment_name="name_of_the_exp_you_want_to_score" m
 ```
 
 Make sure to specify the name of the checkpoint you want to score and to have the right model config
+
+## change augmentation
+- change number of copies in datamoduleaugment.py
