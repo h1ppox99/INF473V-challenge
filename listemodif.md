@@ -6,3 +6,5 @@ En gros j'ai modifié quelques trucs :
 et ensuite j'ai créé un dictionnaire cheese_description.yaml parce que la description des fromages on l'utilise à deux endroits : la génération et la curation.
 
 Puis j'ai fait une augmentation artificielle du nombre d'images avec des transform
+
+- curate.py pour ne garder que les images les plus pertinentes (à tuner)

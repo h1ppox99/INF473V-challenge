@@ -14,7 +14,7 @@ class SDTurboGenerator:
     def __init__(
         self,
     ):
-        base = "stabilityai/stable-diffusion-xl-base-1.0"
+        base = "stabilityai/sdxl-turbo"
         repo = "ByteDance/SDXL-Turbo"
         ckpt = "sdxl_turbo_4step_unet.safetensors"
 
