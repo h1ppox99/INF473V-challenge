@@ -26,7 +26,8 @@ class ContextsPromptsDatasetGenerator:
     def generate(self, labels_names):
         labels_prompts = self.create_prompts(labels_names)
         for label, label_prompts in labels_prompts.items():
-            image_id_0 = 0
+            #mettre image_id_0 à la plus grande valeur déjà existante dans le dossier
+            image_id_0 = 200
             for prompt_metadata in label_prompts:
                 num_images_per_prompt = prompt_metadata["num_images"]
                 prompt = [prompt_metadata["prompt"]] * num_images_per_prompt
@@ -144,7 +145,7 @@ class ContextsPromptsDatasetGenerator:
                 for _,fond in fonds.items():
                     for _,cadrage in cadrages.items():
                         prompt = f"A {cadrage} realistic image with very precise details and natural colours of {fromage}, {context}, {fond}."
-                        cheese_prompts[fromage_maj].append({"prompt": prompt, "num_images": 1})
+                        cheese_prompts[fromage_maj].append({"prompt": prompt, "num_images": 5})
 
         return cheese_prompts
 
