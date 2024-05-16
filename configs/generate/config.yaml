@@ -1,6 +1,6 @@
 defaults:
   - image_generator: sdxl_lightning
-  - dataset_generator: contexts_prompts
+  - dataset_generator: gpt_prompts
 data_dir: ${root_dir}/dataset
 root_dir:  ${hydra:runtime.cwd}
 batch_size: 1

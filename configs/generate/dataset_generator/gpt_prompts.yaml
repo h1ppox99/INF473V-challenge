@@ -1,0 +1,5 @@
+_target_: data.dataset_generators.contexts.ContextsPromptsDatasetGenerator
+generator: ${image_generator}
+cheese_description: ${root_dir}/chatgpt_descriptions.yaml
+batch_size: ${batch_size}
+output_dir: ${data_dir}/train/gpt_prompts

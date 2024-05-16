@@ -1,6 +1,6 @@
 defaults:
   - model: dinov2
-  - dataset: contexts_augment
+  - dataset: gpt_augment
   - optim: adamw
   - loss_fn: cross_entropy
 
@@ -17,7 +17,7 @@ datamodule:
 
 data_dir: ${root_dir}/dataset
 root_dir:  ${hydra:runtime.cwd}
-checkpoint_path: ${root_dir}/checkpoints/${experiment_name}.pt
+checkpoint_path: ${root_dir}/dataset/checkpoints/${experiment_name}.pt
 
 experiment_name: ${model.name}_${dataset.name}
 hydra:

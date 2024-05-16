@@ -17,6 +17,10 @@ transforms:
     sigma: 50.0
   - _target_: torchvision.transforms.RandomPosterize
     bits: 4
+  # - _target_: torchvision.transforms.RandomErasing
+  #   p: 0.5
+  #   scale: [0.02, 0.33]
+  #   ratio: [0.3, 3.3]
   #mandatory transforms
   - _target_: torchvision.transforms.Resize
     size: [224, 224]
