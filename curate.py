@@ -208,6 +208,7 @@ def curate2(cfg):
         index = labels.index(label)
         print("Processing label:", label)
         nb_wrong_label = 0
+        nb_total = 0
         subfolder_path = os.path.join(cfg.images_dir, label)
         image_files = [f for f in os.listdir(subfolder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
@@ -215,6 +216,7 @@ def curate2(cfg):
         for image_file in image_files:
             image_path = os.path.join(subfolder_path, image_file)
             image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
+            nb_total += 1
 
             with torch.no_grad():
                 image_features = model.encode_image(image)
@@ -222,14 +224,17 @@ def curate2(cfg):
                 # Calculate cosine similarity between the image features and the val_image_features of the corresponding label
                 similarity = F.cosine_similarity(image_features, features[index].unsqueeze(0)).item()
                 # add to result txt
-                results[image_file] = f'similarity for image {image_file} in folder {label} is {similarity}'
 
                 # Optional: Determine if the similarity is below a threshold
-                threshold = 0.8  # Define a threshold for considering an image wrongly labeled
+                threshold = cfg.threshold  # Define a threshold for considering an image wrongly labeled
                 if similarity < threshold:
+                    if cfg.delete:
+                        #delete the image
+                        os.remove(image_path)
                     nb_wrong_label += 1
                     nb_wrong += 1
-        print(f"Number of wrong predictions for {label}: {nb_wrong_label}")
+        print(f"Number of wrong predictions for {label}: {nb_wrong_label} out of {nb_total}")
+        results[label] = f"Number of wrong predictions for {label}: {nb_wrong_label} out of {nb_total} \n"
     #save results to a txt file
     with open("results.txt", "w") as file:
         file.write(str(results))

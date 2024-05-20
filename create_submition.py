@@ -60,6 +60,7 @@ def create_submission(cfg):
             ]
         )
     submission.to_csv(f"{cfg.root_dir}/submission.csv", index=False)
+    print(f"Submission saved to {cfg.root_dir}/submission.csv")
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import hydra
 from tqdm import tqdm
 
 
+
 @hydra.main(config_path="configs/train", config_name="config")
 def train(cfg):
     logger = wandb.init(project="challenge_cheese", name=cfg.experiment_name)
