@@ -7,7 +7,7 @@ defaults:
 epochs: 20
 
 datamodule:
-  _target_: data.datamoduleaugment.DataModuleAugment # modifier
+  _target_: data.datamoduleaugment.DataModuleAugment #modifier
   train_dataset_path: ${dataset.train_path}
   real_images_val_path: ${dataset.real_images_val_path}
   train_transform: ${dataset.train_transform}

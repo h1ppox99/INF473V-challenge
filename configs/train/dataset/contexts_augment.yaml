@@ -4,9 +4,9 @@ defaults:
 
 name: contexts_augment
 num_classes: 37
-batch_size: 128
+batch_size: 64
 num_workers: 8
-train_path: ${data_dir}/train/contexts_prompts
+train_path: ${data_dir}/train/context_prompts2
 # train_path: ${data_dir}/val
 real_images_val_path: ${data_dir}/val
 test_path: ${data_dir}/test 

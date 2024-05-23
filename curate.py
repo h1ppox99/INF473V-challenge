@@ -161,9 +161,12 @@ def curate2(cfg):
     model, preprocess = clip.load('ViT-B/32', device=device)
     with open(cfg.cheese_description, 'r') as file:
         cheese_description = yaml.safe_load(file)
+    
+    
 
     # Derive labels from the names of subdirectories in the specified images directory
     labels = [name for name in os.listdir(cfg.images_dir) if os.path.isdir(os.path.join(cfg.images_dir, name))]
+ 
     text_inputs = torch.cat([clip.tokenize(f"a photo of a {cheese_description[label]} cheese") for label in labels]).to(device)
     
     # Use the validation set to curate the training set

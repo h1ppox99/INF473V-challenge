@@ -1,12 +1,14 @@
 # parameters for the curator
 root_dir:  ${hydra:runtime.cwd}
 data_dir: ${root_dir}/dataset
-images_dir: ${data_dir}/train/contexts_prompts
+images_dir: ${data_dir}/train/IPA2
 # images_dir: ${data_dir}/val
 val_dir: ${data_dir}/val
 labels_file: ${root_dir}/list_of_cheese.txt
 batch_size: 32
 cheese_description: ${root_dir}/cheese_description.yaml
+threshold: 0.8
+delete: true
 nb_list: 10
 use_val: true #using val_dir instead of text_dir
 

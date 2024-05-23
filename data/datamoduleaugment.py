@@ -33,7 +33,7 @@ class DataModuleAugment:
     ):
         self.dataset = ImageFolder(train_dataset_path)
         # creating copies of the dataset
-        self.dataset = DuplicatedDataset(train_dataset_path, train_transform, num_copies=5)
+        self.dataset = DuplicatedDataset(train_dataset_path, train_transform, num_copies=1)
 
         # Assign the transform for training dataset
         self.val_transform = val_transform
