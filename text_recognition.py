@@ -25,7 +25,7 @@ def clean_text(text):
     return cleaned_text
 
 def extract_text_from_image(preprocessed_image):
-    custom_config = r'--oem 3 --psm 6 -l fra'
+    custom_config = r'--oem 3 --psm 11 -l fra'
     text = pytesseract.image_to_string(preprocessed_image, config=custom_config)
     return text if text.strip() else "No text recognised"
 
