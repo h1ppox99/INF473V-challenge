@@ -8,7 +8,7 @@ from omegaconf import DictConfig, OmegaConf
 sweep_config = {
     'method': 'bayes',
     'metric': {
-        'name': 'val/loss',
+        'name': 'real_val/acc',
         'goal': 'minimize'
     },
     'parameters': {
