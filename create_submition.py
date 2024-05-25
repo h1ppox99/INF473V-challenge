@@ -9,10 +9,9 @@ import pytesseract
 import hydra
 from omegaconf import DictConfig
 from text_recognition_easyocr import *
+import time
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-
 
 class TestDataset(Dataset):
     def __init__(self, test_dataset_path, test_transform):
@@ -32,7 +31,6 @@ class TestDataset(Dataset):
         return len(self.images_list)
 
 text_recognition = TextRecognition('/path/to/tessdata_fast', list(cheese_keywords.keys()), cheese_keywords)
-
 
 @hydra.main(config_path="configs/train", config_name="config")
 def create_submission(cfg: DictConfig):
@@ -57,6 +55,7 @@ def create_submission(cfg: DictConfig):
         model.load_state_dict(checkpoint)
     
     model.eval()
+    
     class_names = sorted(os.listdir(cfg.dataset.train_path))
 
     # Create submission.csv
@@ -69,21 +68,23 @@ def create_submission(cfg: DictConfig):
         images = images.to(device)
         with torch.no_grad():
             preds = model(images)
+        scores = preds.softmax(1)
         preds = preds.argmax(1)
         preds = [class_names[pred] for pred in preds.cpu().numpy()]
 
         for j, image_name in enumerate(image_names):
             # Indiquer le nombre d'images restantes
             print(f"Image {j}/{len(image_names)}")
+            # On récupère le score de la prédiction
+            model_score = scores[j][class_names.index(preds[j])].item()
             image_path = os.path.join(cfg.dataset.test_path, image_name + ".jpg")
             original_image = Image.open(image_path)
             best_cheese, best_score = text_recognition.predict(image_path, preprocess)
 
-            if best_score > 0.7:
+            if ((best_score > 0.77) or (model_score < 0.15 and best_score > 0.6)):
                 final_label = best_cheese
             else:
                 final_label = preds[j]
-
             submission = pd.concat(
                 [
                     submission,
@@ -91,7 +92,7 @@ def create_submission(cfg: DictConfig):
                 ],
                 ignore_index=True
             )
-    submission.to_csv(os.path.join(cfg.root_dir, "submission.csv"), index=False)
+    submission.to_csv(os.path.join(cfg.root_dir, "submission25_05_2.csv"), index=False)
 
 if __name__ == "__main__":
     create_submission()

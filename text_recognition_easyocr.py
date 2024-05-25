@@ -6,15 +6,13 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 import numpy as np
 import torch
-import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix
 from PIL import ImageEnhance
 
 def preprocess(image, resize_factor=1.5):
     image = image.resize([int(dim * resize_factor) for dim in image.size], Image.LANCZOS)
     return image
-
 
 class TextRecognition:
     def __init__(self, tessdata_prefix, cheese_names, cheese_keywords):
@@ -25,7 +23,7 @@ class TextRecognition:
         self.reader = easyocr.Reader(['fr', 'en'], gpu=torch.cuda.is_available())
 
     def clean_text(self, text):
-        words = re.findall(r'\b[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ]{3,}\b', text)
+        words = re.findall(r'\b[a-zA-ZàäëïîôöùûüÿçÀÂÄÊËÏÎÔÖÙÛÜŸÇ]{3,}\b', text)
         cleaned_text = ' '.join(words)
         return cleaned_text
 
@@ -34,13 +32,14 @@ class TextRecognition:
         combined_text = ' '.join([item[1] for item in result])
         return combined_text if combined_text.strip() else ""
 
+
     def predict(self, image_path, preprocess_function):
         with Image.open(image_path) as img:
             img = img.convert('L')
             img = preprocess_function(img)
             extracted_text = self.extract_text_from_image(img)
-            cleaned_text = self.clean_text(extracted_text)
-            best_cheese, best_score = self.compute_similarity_scores(cleaned_text)
+            #cleaned_text = self.clean_text(extracted_text)
+            best_cheese, best_score = self.compute_similarity_scores(extracted_text)
             return best_cheese, best_score
 
     def compute_similarity_scores(self, text):
@@ -57,21 +56,21 @@ class TextRecognition:
 cheese_keywords = {
     "BRIE DE MELUN": ["brie", "melun","seine-et-marne"],
     "CAMEMBERT": ["camembert", "normandie", "calvados","president"],
-    "EPOISSES": ["époisses", "burgundy", "affiné","berthaut"],
+    "EPOISSES": ["époisses", "burgundy", "berthaut"],
     "FOURME D’AMBERT": ["fourme", "ambert"],
     "RACLETTE": ["raclette"],
     "MORBIER": ["morbier"],
-    "SAINT-NECTAIRE": ["saint-nectaire", "auvergne", "cantal"],
+    "SAINT-NECTAIRE": ["saint-nectaire"],
     "POULIGNY SAINT- PIERRE": ["pouligny", "saint-pierre", "pyramide"],
-    "ROQUEFORT": ["roquefort"],
+    "ROQUEFORT": ["roquefort","société"],
     "COMTÉ": ["comté"],
-    "CHÈVRE": ["zzzzzzzzzzzzzzzzzzzzzzzzzzzz"], # On ne met pas de mots-clés pour le fromage de chèvre car cela fait des faux positifs
+    #"CHÈVRE": ["chèvre"], 
     "PECORINO": ["pecorino", "romano"],
     "NEUFCHATEL": ["neufchâtel", "brais"],
     "CHEDDAR": ["cheddar", "mature"],
-    "BÛCHETTE DE CHÈVRE": ["zzzzzzzzzzzzzzzzzzzzzzzz"], # On ne met pas de mots-clés pour le fromage de chèvre car cela fait des faux positifs
+    #"BÛCHETTE DE CHÈVRE": ["buchette"], # On ne met pas de mots-clés pour le fromage de chèvre car cela fait des faux positifs
     "PARMESAN": ["parmesan", "parmigiano", "reggiano"],
-    "SAINT-FÉLICIEN": ["saint-felicien", "felicien"],
+    "SAINT-FÉLICIEN": ["saint-félicien", "félicien"],
     "MONT D’OR": ["mont d’or", "haut-doubs", "arnaud"],
     "STILTON": ["stilton", "blue", "england"],
     "SCARMOZA": ["scarmoza", "affumicata"],
@@ -79,7 +78,7 @@ cheese_keywords = {
     "BEAUFORT": ["beaufort"],
     "MUNSTER": ["munster", "alsace", "cumin"],
     "CHABICHOU": ["chabichou", "poitou"],
-    "TOMME DE VACHE": ["tomme", "cow", "montagne"],
+    "TOMME DE VACHE": ["tomme", "tomme de montagne"],
     "REBLOCHON": ["reblochon", "savoie"],
     "EMMENTAL": ["emmental"],
     "FETA": ["feta", "greek", "grecque"],
@@ -93,7 +92,6 @@ cheese_keywords = {
     "TÊTE DE MOINES": ["tête de moine", "moine", "bellelay"],
     "FROMAGE FRAIS": ["fromage frais", "fresh cheese", "nature"]
 }
-
 '''
 text_recognition = TextRecognition('/path/to/tessdata_fast', list(cheese_keywords.keys()), cheese_keywords)
 
@@ -111,34 +109,51 @@ for cheese_type in os.listdir(val_dir):
         prediction, best_score = text_recognition.predict(image_path, preprocess_function)
         results.append((cheese_type, prediction, best_score))
 
-# Apply thresholds and calculate percentage of answered images
-thresholds = np.arange(0.4, 1.0, 0.01)
+thresholds = np.arange(0.6, 0.91, 0.01)
 accuracies = []
+response_rates = []
+products = []
 
 for threshold in thresholds:
     true_labels = []
     predicted_labels = []
-    
+
     for true_label, predicted_label, score in results:
         if score > threshold:
             true_labels.append(true_label)
             predicted_labels.append(predicted_label)
-    
-    if true_labels:
-        accuracy = accuracy_score(true_labels, predicted_labels)
-    else:
-        accuracy = 0
+
+    accuracy = accuracy_score(true_labels, predicted_labels)
+    response_rate = len(predicted_labels) / len(results)
     accuracies.append(accuracy)
+    response_rates.append(response_rate)
+    products.append(accuracy * response_rate)
 
+# Plotting accuracy, response rate, and product of both
+fig, ax1 = plt.subplots(figsize=(12, 6))
 
+color = 'tab:blue'
+ax1.set_xlabel('Threshold')
+ax1.set_ylabel('Accuracy', color=color)
+ax1.plot(thresholds, accuracies, color=color, label='Accuracy')
+ax1.tick_params(axis='y', labelcolor=color)
 
-# Plot accuracy vs threshold
-plt.figure(figsize=(10, 6))
-plt.plot(thresholds, accuracies, marker='o')
-plt.title('Accuracy vs Threshold')
-plt.xlabel('Threshold')
-plt.ylabel('Accuracy')
-plt.grid(True)
-plt.savefig("/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/accuracy_vs_threshold.png")
+ax2 = ax1.twinx()
+color = 'tab:orange'
+ax2.set_ylabel('Response Rate', color=color)
+ax2.plot(thresholds, response_rates, color=color, label='Response Rate', linestyle='dashed')
+ax2.tick_params(axis='y', labelcolor=color)
 
+ax3 = ax1.twinx()
+color = 'tab:green'
+ax3.spines['right'].set_position(('outward', 60))
+ax3.set_ylabel('Product', color=color)
+ax3.plot(thresholds, products, color=color, label='Product', linestyle='dotted')
+ax3.tick_params(axis='y', labelcolor=color)
+
+fig.tight_layout()
+plt.title('Accuracy, Response Rate, and Product vs Threshold')
+fig.legend(loc='upper left')
+plt.savefig("test_zeroclean.png")
+plt.show()
 '''
