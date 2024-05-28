@@ -38,19 +38,33 @@ class TextRecognition:
             img = img.convert('L')
             img = preprocess_function(img)
             extracted_text = self.extract_text_from_image(img)
-            #cleaned_text = self.clean_text(extracted_text)
-            best_cheese, best_score = self.compute_similarity_scores(extracted_text)
+            cleaned_text = self.clean_text(extracted_text)
+            best_cheese, best_score = self.compute_similarity_scores(cleaned_text)
             return best_cheese, best_score
 
     def compute_similarity_scores(self, text):
         scores = {}
         for cheese in self.cheese_names:
             keywords = self.cheese_keywords[cheese]
-            max_score = max(fuzz.partial_ratio(text.lower(), keyword.lower()) / 100 for keyword in keywords)
-            scores[cheese] = max_score
+            cheese_scores = [fuzz.partial_ratio(text.lower(), keyword.lower()) / 100 for keyword in keywords]
+            scores[cheese] = max(cheese_scores) if cheese_scores else 0
+
         best_cheese = max(scores, key=scores.get)
         best_score = scores[best_cheese]
         return best_cheese, best_score
+
+
+'''
+    def modif_scores(self, scores):
+        for key, value in scores.items():
+            if value < 0.6:
+                scores[key] = 0
+            else:
+                scores[key] = value
+        return scores
+'''
+
+
 
 # Liste des fromages avec leurs mots-clés
 cheese_keywords = {
@@ -64,13 +78,13 @@ cheese_keywords = {
     "POULIGNY SAINT- PIERRE": ["pouligny", "saint-pierre", "pyramide"],
     "ROQUEFORT": ["roquefort","société"],
     "COMTÉ": ["comté"],
-    #"CHÈVRE": ["chèvre"], 
+    "CHÈVRE": ["zzzzzzzzzzzzzzzzzzzzzzzzz"], 
     "PECORINO": ["pecorino", "romano"],
     "NEUFCHATEL": ["neufchâtel", "brais"],
     "CHEDDAR": ["cheddar", "mature"],
-    #"BÛCHETTE DE CHÈVRE": ["buchette"], # On ne met pas de mots-clés pour le fromage de chèvre car cela fait des faux positifs
+    "BÛCHETTE DE CHÈVRE": ["zzzzzzzzzzzzzzzzzzz"], # On ne met pas de mots-clés pour le fromage de chèvre car cela fait des faux positifs
     "PARMESAN": ["parmesan", "parmigiano", "reggiano"],
-    "SAINT-FÉLICIEN": ["saint-félicien", "félicien"],
+    "SAINT- FÉLICIEN": ["saint-félicien", "félicien"],
     "MONT D’OR": ["mont d’or", "haut-doubs", "arnaud"],
     "STILTON": ["stilton", "blue", "england"],
     "SCARMOZA": ["scarmoza", "affumicata"],
