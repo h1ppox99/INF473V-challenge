@@ -40,7 +40,7 @@ if __name__ == "__main__":
     with open ('list_of_cheese.txt', 'r') as file:
         for line in file:
             line = line.strip()
-            src_directory = f"dataset/train/IPA/{line}"
+            src_directory = f"dataset/train/IPA5/{line}"
             dest_directory = f"dataset/train/contexts_prompts2/{line}"
             move_files_with_rename(src_directory, dest_directory)
         print('done')

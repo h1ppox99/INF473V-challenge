@@ -2,11 +2,11 @@ defaults:
   - train_transform: augment
   - test_transform: simple
 
-name: contexts_augment
+name: IPA
 num_classes: 37
-batch_size: 128
+batch_size: 16
 num_workers: 8
-train_path: ${data_dir}/train/contextS_prompts
+train_path: ${data_dir}/train/IPA3
 # train_path: ${data_dir}/val
 real_images_val_path: ${data_dir}/val
 test_path: ${data_dir}/test 

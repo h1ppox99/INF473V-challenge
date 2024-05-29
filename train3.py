@@ -13,16 +13,16 @@ sweep_config = {
     },
     'parameters': {
         'learning_rate': {
-            'values': [0.1, 0.01, 0.001, 0.0001]
+            'values': [0.001, 0.0001, 0.00001, 0.000001]
         },
         'batch_size': {
-            'values': [16, 32, 64]
+            'values': [16, 32, 64,128]
         },
         'optimizer': {
             'values': ['AdamW']
         },
         'epochs': {
-            'values': [10, 20, 30]
+            'values': [10, 14, 17, 20]
         }
     }
 }
@@ -47,16 +47,22 @@ def train(cfg: DictConfig):
         cfg['optim']['lr'] = wandb.config.learning_rate
         cfg['optim']['_target_'] = optimizer_target[wandb.config.optimizer]
 
+        if wandb.config.optimizer == 'sgd':
+            cfg['optim']['momentum'] = 0.9  # Example default value, adjust as needed
+            cfg['optim']['weight_decay'] = 0.0005  # Example default value, adjust as needed
+            cfg['optim'].pop('betas', None)  # Remove betas if present
+
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = hydra.utils.instantiate(cfg['model']['instance']).to(device)
         optimizer = hydra.utils.instantiate(cfg['optim'], params=model.parameters())
         loss_fn = hydra.utils.instantiate(cfg['loss_fn'])
         datamodule = hydra.utils.instantiate(cfg['datamodule'])
 
-        train_loader = datamodule.train_dataloader()
         val_loaders = datamodule.val_dataloader()
 
         for epoch in tqdm(range(cfg['epochs'])):
+            
+            train_loader = datamodule.train_dataloader()
             epoch_loss = 0
             epoch_num_correct = 0
             num_samples = 0

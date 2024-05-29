@@ -167,7 +167,7 @@ def curate2(cfg):
     # Derive labels from the names of subdirectories in the specified images directory
     labels = [name for name in os.listdir(cfg.images_dir) if os.path.isdir(os.path.join(cfg.images_dir, name))]
  
-    text_inputs = torch.cat([clip.tokenize(f"a photo of a {cheese_description[label]} cheese") for label in labels]).to(device)
+    text_inputs = torch.cat([clip.tokenize(f"{label} cheese") for label in labels]).to(device)
     
     # Use the validation set to curate the training set
     # Process the images in the validation set
@@ -216,10 +216,13 @@ def curate2(cfg):
         image_files = [f for f in os.listdir(subfolder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
         best_labels = []
+        mean_similarity = 0
+        nb_label = 0
         for image_file in image_files:
             image_path = os.path.join(subfolder_path, image_file)
             image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
             nb_total += 1
+            nb_label += 1
 
             with torch.no_grad():
                 image_features = model.encode_image(image)
@@ -227,6 +230,7 @@ def curate2(cfg):
                 # Calculate cosine similarity between the image features and the val_image_features of the corresponding label
                 similarity = F.cosine_similarity(image_features, features[index].unsqueeze(0)).item()
                 # add to result txt
+                mean_similarity += similarity
 
                 # Optional: Determine if the similarity is below a threshold
                 threshold = cfg.threshold  # Define a threshold for considering an image wrongly labeled
@@ -236,6 +240,8 @@ def curate2(cfg):
                         os.remove(image_path)
                     nb_wrong_label += 1
                     nb_wrong += 1
+        print(f"Mean similarity for {label}: {mean_similarity/nb_total}")
+                
         print(f"Number of wrong predictions for {label}: {nb_wrong_label} out of {nb_total}")
         results[label] = f"Number of wrong predictions for {label}: {nb_wrong_label} out of {nb_total} \n"
     #save results to a txt file

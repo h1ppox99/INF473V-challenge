@@ -8,7 +8,7 @@ class ContextsPromptsDatasetGenerator:
         self,
         generator,
         cheese_description,
-        batch_size=1,
+        batch_size=200,
         output_dir="dataset/train",
         
     ):

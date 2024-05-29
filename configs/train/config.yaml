@@ -1,6 +1,6 @@
 defaults:
   - model: dinov2
-  - dataset: contexts_augment
+  - dataset: IPA
   - optim: adamw
   - loss_fn: cross_entropy
 
