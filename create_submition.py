@@ -64,11 +64,13 @@ def create_submission(cfg: DictConfig):
     for i, batch in enumerate(test_loader):
         # Indiquer le nombre de batchs restants
         print(f"Batch {i}/{len(test_loader)}")
+        if i == 1:
+            break
         images, image_names = batch
         images = images.to(device)
         with torch.no_grad():
             preds = model(images)
-        scores = preds.softmax(1)
+        #scores = preds.softmax(1)
         preds = preds.argmax(1)
         preds = [class_names[pred] for pred in preds.cpu().numpy()]
 
@@ -76,15 +78,16 @@ def create_submission(cfg: DictConfig):
             # Indiquer le nombre d'images restantes
             print(f"Image {j}/{len(image_names)}")
             # On récupère le score de la prédiction
-            model_score = scores[j][class_names.index(preds[j])].item()
-            image_path = os.path.join(cfg.dataset.test_path, image_name + ".jpg")
-            original_image = Image.open(image_path)
-            best_cheese, best_score = text_recognition.predict(image_path, preprocess)
+            #model_score = scores[j][class_names.index(preds[j])].item()
+            #image_path = os.path.join(cfg.dataset.test_path, image_name + ".jpg")
+            #original_image = Image.open(image_path)
+            #best_cheese, best_score = text_recognition.predict(image_path, preprocess)
 
-            if (best_score > 0.83):
-                final_label = best_cheese
-            else:
-                final_label = "UNKNOWN"
+            #if (best_score > 0.83):
+                #final_label = best_cheese
+            #else:
+                #final_label = "UNKNOWN"
+            final_label = preds[j]
             submission = pd.concat(
                 [
                     submission,

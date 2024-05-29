@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Load the CSV files
-df1 = pd.read_csv('submission28_05_2.csv')
-df2 = pd.read_csv('second_file.csv')
+df1 = pd.read_csv('/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/submission_ocr_83.csv')
+df2 = pd.read_csv('/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/submissions/submission28_05_1.csv')
 
 # Function to merge the two dataframes based on the specified logic
 def merge_submissions(df1, df2):
@@ -19,5 +19,4 @@ merged_df = merge_submissions(df1, df2)
 
 # Save the merged dataframe to a new CSV file
 merged_df.to_csv('merged_submission.csv', index=False)
-
 

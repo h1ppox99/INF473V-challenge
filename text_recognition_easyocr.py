@@ -95,7 +95,7 @@ cheese_keywords = {
     "VACHERIN": ["vacherin"],
     "MOZZARELLA": ["mozzarella", "di bufala", "campana"],
     "TÊTE DE MOINES": ["tête de moine", "moine", "bellelay"],
-    "FROMAGE FRAIS": ["fromage frais", "fresh cheese", "nature"]
+    "FROMAGE FRAIS": ["fromage frais", "fresh cheese", "nature", "yoplait"]
 }
 
 text_recognition = TextRecognition('/path/to/tessdata_fast', list(cheese_keywords.keys()), cheese_keywords)
