@@ -84,7 +84,7 @@ def create_submission(cfg: DictConfig):
             if (best_score > 0.83):
                 final_label = best_cheese
             else:
-                final_label = preds[j]
+                final_label = "UNKNOWN"
             submission = pd.concat(
                 [
                     submission,
@@ -92,7 +92,7 @@ def create_submission(cfg: DictConfig):
                 ],
                 ignore_index=True
             )
-    submission.to_csv(os.path.join(cfg.root_dir, "submission29_05_1.csv"), index=False)
+    submission.to_csv(os.path.join(cfg.root_dir, "submission_ocr_83.csv"), index=False)
 
 if __name__ == "__main__":
     create_submission()

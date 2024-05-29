@@ -103,7 +103,7 @@ text_recognition = TextRecognition('/path/to/tessdata_fast', list(cheese_keyword
 val_dir = "/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/dataset/val/"
 
 preprocess_function = preprocess
-
+'''
 # Collect results for all images
 results = []
 
@@ -155,3 +155,4 @@ plt.title('Accuracy and Response Rate vs Threshold')
 fig.legend(loc='upper left')
 plt.savefig("test_zeroclean.png")
 plt.show()
+'''
