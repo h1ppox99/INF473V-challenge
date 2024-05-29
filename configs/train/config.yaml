@@ -17,7 +17,7 @@ datamodule:
 
 data_dir: ${root_dir}/dataset
 root_dir:  ${hydra:runtime.cwd}
-checkpoint_path: ${root_dir}/checkpoints/merged_model_80.pt
+checkpoint_path: ${root_dir}/checkpoints/DINOV2_IPA_26_05_66pc.pt
 
 experiment_name: ${model.name}_${dataset.name}
 hydra:

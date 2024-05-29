@@ -81,7 +81,7 @@ def create_submission(cfg: DictConfig):
             original_image = Image.open(image_path)
             best_cheese, best_score = text_recognition.predict(image_path, preprocess)
 
-            if ((best_score > 0.77) or (model_score < 0.15 and best_score > 0.6)):
+            if (best_score > 0.83):
                 final_label = best_cheese
             else:
                 final_label = preds[j]
@@ -92,7 +92,7 @@ def create_submission(cfg: DictConfig):
                 ],
                 ignore_index=True
             )
-    submission.to_csv(os.path.join(cfg.root_dir, "submission25_05_2.csv"), index=False)
+    submission.to_csv(os.path.join(cfg.root_dir, "submission29_05_1.csv"), index=False)
 
 if __name__ == "__main__":
     create_submission()

@@ -54,15 +54,6 @@ class TextRecognition:
         return best_cheese, best_score
 
 
-'''
-    def modif_scores(self, scores):
-        for key, value in scores.items():
-            if value < 0.6:
-                scores[key] = 0
-            else:
-                scores[key] = value
-        return scores
-'''
 
 
 
@@ -106,7 +97,7 @@ cheese_keywords = {
     "TÊTE DE MOINES": ["tête de moine", "moine", "bellelay"],
     "FROMAGE FRAIS": ["fromage frais", "fresh cheese", "nature"]
 }
-'''
+
 text_recognition = TextRecognition('/path/to/tessdata_fast', list(cheese_keywords.keys()), cheese_keywords)
 
 val_dir = "/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/dataset/val/"
@@ -133,7 +124,7 @@ for threshold in thresholds:
     predicted_labels = []
 
     for true_label, predicted_label, score in results:
-        if score > threshold:
+        if score > threshold and score < threshold + 0.05:
             true_labels.append(true_label)
             predicted_labels.append(predicted_label)
 
@@ -141,7 +132,7 @@ for threshold in thresholds:
     response_rate = len(predicted_labels) / len(results)
     accuracies.append(accuracy)
     response_rates.append(response_rate)
-    products.append(accuracy * response_rate)
+    
 
 # Plotting accuracy, response rate, and product of both
 fig, ax1 = plt.subplots(figsize=(12, 6))
@@ -158,16 +149,9 @@ ax2.set_ylabel('Response Rate', color=color)
 ax2.plot(thresholds, response_rates, color=color, label='Response Rate', linestyle='dashed')
 ax2.tick_params(axis='y', labelcolor=color)
 
-ax3 = ax1.twinx()
-color = 'tab:green'
-ax3.spines['right'].set_position(('outward', 60))
-ax3.set_ylabel('Product', color=color)
-ax3.plot(thresholds, products, color=color, label='Product', linestyle='dotted')
-ax3.tick_params(axis='y', labelcolor=color)
 
 fig.tight_layout()
-plt.title('Accuracy, Response Rate, and Product vs Threshold')
+plt.title('Accuracy and Response Rate vs Threshold')
 fig.legend(loc='upper left')
 plt.savefig("test_zeroclean.png")
 plt.show()
-'''
