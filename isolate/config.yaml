@@ -1,0 +1,4 @@
+cheese_path: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/dataset/IPA_2"
+labels_path: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/list_of_cheese2.txt"
+output_dir: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/dataset/IPA_blank"
+num_images_per_label: 3
