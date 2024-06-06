@@ -9,6 +9,7 @@ import torch
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, confusion_matrix
 from PIL import ImageEnhance
+import time
 
 def preprocess(image, resize_factor=1.5):
     image = image.resize([int(dim * resize_factor) for dim in image.size], Image.LANCZOS)
@@ -23,15 +24,23 @@ class TextRecognition:
         self.reader = easyocr.Reader(['fr', 'en'], gpu=torch.cuda.is_available())
 
     def clean_text(self, text):
-        words = re.findall(r'\b[a-zA-ZàäëïîôöùûüÿçÀÂÄÊËÏÎÔÖÙÛÜŸÇ]{3,}\b', text)
+        words = re.findall(r'\b[a-zA-ZàäëïîôöùüÿçÀÂÄÊËÏÎÔÖÙÜŸÇ]{3,}\b', text)
         cleaned_text = ' '.join(words)
+        print(cleaned_text)
         return cleaned_text
 
     def extract_text_from_image(self, preprocessed_image):
         result = self.reader.readtext(np.array(preprocessed_image))
         combined_text = ' '.join([item[1] for item in result])
+        print(combined_text)
         return combined_text if combined_text.strip() else ""
 
+    '''
+    def generate_ngrams(self, text, n):
+        words = text.split()
+        ngrams = [' '.join(words[i:i+n]) for i in range(len(words)-n+1)]
+        return ngrams
+    '''
 
     def predict(self, image_path, preprocess_function):
         with Image.open(image_path) as img:
@@ -51,51 +60,50 @@ class TextRecognition:
 
         best_cheese = max(scores, key=scores.get)
         best_score = scores[best_cheese]
+        #print("Score :"+str(best_score)+" Fromage :"+best_cheese)
         return best_cheese, best_score
-
-
 
 
 
 # Liste des fromages avec leurs mots-clés
 cheese_keywords = {
-    "BRIE DE MELUN": ["brie", "melun","seine-et-marne"],
-    "CAMEMBERT": ["camembert", "normandie", "calvados","president"],
-    "EPOISSES": ["époisses", "burgundy", "berthaut"],
-    "FOURME D’AMBERT": ["fourme", "ambert"],
-    "RACLETTE": ["raclette"],
-    "MORBIER": ["morbier"],
-    "SAINT-NECTAIRE": ["saint-nectaire"],
-    "POULIGNY SAINT- PIERRE": ["pouligny", "saint-pierre", "pyramide"],
-    "ROQUEFORT": ["roquefort","société"],
-    "COMTÉ": ["comté"],
-    "CHÈVRE": ["zzzzzzzzzzzzzzzzzzzzzzzzz"], 
-    "PECORINO": ["pecorino", "romano"],
-    "NEUFCHATEL": ["neufchâtel", "brais"],
-    "CHEDDAR": ["cheddar", "mature"],
-    "BÛCHETTE DE CHÈVRE": ["zzzzzzzzzzzzzzzzzzz"], # On ne met pas de mots-clés pour le fromage de chèvre car cela fait des faux positifs
-    "PARMESAN": ["parmesan", "parmigiano", "reggiano"],
-    "SAINT- FÉLICIEN": ["saint-félicien", "félicien"],
-    "MONT D’OR": ["mont d’or", "haut-doubs", "arnaud"],
-    "STILTON": ["stilton", "blue", "england"],
-    "SCARMOZA": ["scarmoza", "affumicata"],
-    "CABECOU": ["cabecou", "rocamadour"],
-    "BEAUFORT": ["beaufort"],
-    "MUNSTER": ["munster", "alsace", "cumin"],
-    "CHABICHOU": ["chabichou", "poitou"],
-    "TOMME DE VACHE": ["tomme", "tomme de montagne"],
-    "REBLOCHON": ["reblochon", "savoie"],
-    "EMMENTAL": ["emmental"],
-    "FETA": ["feta", "greek", "grecque"],
-    "OSSAU- IRATY": ["ossau", "iraty"],
-    "MIMOLETTE": ["mimolette", "vieille"],
-    "MAROILLES": ["maroilles"],
-    "GRUYÈRE": ["gruyère", "switzerland"],
-    "MOTHAIS": ["mothais", "sur feuille"],
-    "VACHERIN": ["vacherin"],
-    "MOZZARELLA": ["mozzarella", "di bufala", "campana"],
-    "TÊTE DE MOINES": ["tête de moine", "moine", "bellelay"],
-    "FROMAGE FRAIS": ["fromage frais", "fresh cheese", "nature", "yoplait"]
+    "BRIE DE MELUN": ["Brie", "Melun", "Brie de Melun", "Seine-et-Marne", "BRIE", "MELUN", "SEINE-ET-MARNE", "BRIE DE MELUN"],
+    "CAMEMBERT": ["camembert", "Normandie", "Calvados", "CAMEMBERT", "NORMANDIE", "CALVADOS"],
+    "EPOISSES": ["Époisses", "Epoisse", "Burgundy", "Berthaut", "ÉPOISSES", "BURGUNDY", "BERTHAUT", "EPOISSES"],
+    "FOURME D’AMBERT": ["Fourme d'Ambert","Ambert", "AMBERT", "FOURME D’AMBERT"],
+    "RACLETTE": ["Raclette", "RACLETTE"],
+    "MORBIER": ["Morbier", "MORBIER"],
+    "SAINT-NECTAIRE": ["Saint-Nectaire", "SAINT-NECTAIRE"],
+    "POULIGNY SAINT- PIERRE": ["Pouligny Saint-Pierre","Pouligny", "Saint-Pierre", "pyramide", "POULIGNY", "SAINT-PIERRE", "PYRAMIDE", "POULIGNY SAINT-PIERRE"],
+    "ROQUEFORT": ["roquefort", "société", "ROQUEFORT", "SOCIÉTÉ"],
+    "COMTÉ": ["comte", "COMTE", "comté", "COMTÉ"],
+    "CHÈVRE": ["zzzzzzzzzzzzzzzzzzzzzzzzz"],
+    "PECORINO": ["Pecorino", "romano", "Pecorino romano", "PECORINO", "ROMANO", "PECORINO ROMANO"],
+    "NEUFCHATEL": ["Neufchâtel", "Pays de Brais", "NEUFCHÂTEL", "PAYS DE BRAIS"],
+    "CHEDDAR": ["Cheddar", "Cheddar mature", "CHEDDAR", "CHEDDAR MATURE"],
+    "BÛCHETTE DE CHÈVRE": ["Bûche", "Bûchette", "Soignon", "BÛCHE", "BÛCHETTE", "SOIGNON"],
+    "PARMESAN": ["Parmesan", "Parmigiano", "reggiano", "Pamiggiano reggiano", "PARMESAN", "PARMIGIANO", "REGGIANO", "PAMIGGIANO REGGIANO"],
+    "SAINT- FÉLICIEN": ["Saint-Félicien", "St-Félicien", "Félicien", "Étoile du Vercors", "SAINT-FÉLICIEN", "FÉLICIEN", "ÉTOILE DU VERCORS"],
+    "MONT D’OR": ["Mont d’or", "Mont", "Haut-Doubs", "Arnaud", "MONT D’OR", "HAUT-DOUBS", "ARNAUD", "MONT D’OR"],
+    "STILTON": ["stilton", "blue", "Blue Stilton", "england", "STILTON", "BLUE", "ENGLAND"],
+    "SCARMOZA": ["Scarmoza", "affumicata", "Scarmoza affumicata", "SCARMOZA", "AFFUMICATA", "SCARMOZA AFFUMICATA"],
+    "CABECOU": ["Cabecou", "Rocamadour", "CABECOU", "ROCAMADOUR"],
+    "BEAUFORT": ["Beaufort", "BEAUFORT"],
+    "MUNSTER": ["Munster", "Alsace", "MUNSTER", "ALSACE"],
+    "CHABICHOU": ["Chabichou", "Poitou", "CHABICHOU", "POITOU"],
+    "TOMME DE VACHE": ["Tomme", "Tomme de montagne", "TOMME", "TOMME DE MONTAGNE"],
+    "REBLOCHON": ["Reblochon", "Savoie", "REBLOCHON", "SAVOIE"],
+    "EMMENTAL": ["Emmental", "EMMENTAL"],
+    "FETA": ["feta", "greek", "grecque", "FETA", "GREEK", "GRECQUE"],
+    "OSSAU- IRATY": ["Ossau", "iraty", "Ossau-Iraty","OSSAU", "IRATY", "OSSAU-IRATY"],
+    "MIMOLETTE": ["Mimolette", "vieille", "MIMOLETTE", "VIEILLE"],
+    "MAROILLES": ["Maroilles", "MAROILLES"],
+    "GRUYÈRE": ["Gruyère", "Switzerland", "GRUYÈRE", "SWITZERLAND"],
+    "MOTHAIS": ["Mothais", "Mothais sur feuille" ,"sur feuille", "MOTHAIS", "SUR FEUILLE"],
+    "VACHERIN": ["Vacherin", "fribourgeois", "VACHERIN", "FRIBOURGEOIS"],
+    "MOZZARELLA": ["Mozzarella", "di bufala", "Mozarella di buffala", "MOZZARELLA", "DI BUFALA", "CAMPANA"],
+    "TÊTE DE MOINES": ["Tête de moine", "bellelay", "TÊTE DE MOINE", "MOINE", "BELLELAY"],
+    "FROMAGE FRAIS": ["Fromage frais", "fresh cheese", "Fromage frais nature", "yoplait", "FROMAGE FRAIS", "FRESH CHEESE", "NATURE", "YOPLAIT"]
 }
 
 text_recognition = TextRecognition('/path/to/tessdata_fast', list(cheese_keywords.keys()), cheese_keywords)
@@ -103,6 +111,15 @@ text_recognition = TextRecognition('/path/to/tessdata_fast', list(cheese_keyword
 val_dir = "/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/dataset/val/"
 
 preprocess_function = preprocess
+
+
+# On reconnait une image
+path_image = "/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/dataset/val/CAMEMBERT/000017.jpg"
+
+prediction, best_score = text_recognition.predict(path_image, preprocess_function)
+print(prediction, best_score)
+
+
 '''
 # Collect results for all images
 results = []
