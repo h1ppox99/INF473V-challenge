@@ -1,3 +1,17 @@
+## EXPLICATION DE LA BRANCHE HIPPO
+
+1) voir le fichier contexts dans data/dataset_generators/
+2) voir le folder ocr
+3) voir create_submition (surtout la fonction auxiliaire)
+4) voir éventuellement les fichiers : 
+- merge_submissions
+- merge_model
+
+
+###########################################################################
+###########################################################################
+
+
 # Cheese Classification challenge
 This codebase allows you to jumpstart the INF473V challenge.
 The goal of this channel is to create a cheese classifier without any real training data.

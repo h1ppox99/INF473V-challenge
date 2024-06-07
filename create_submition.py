@@ -25,6 +25,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ## FONCTION AUXILIAIRE ##
 #########################
 
+'''
+On ajuste les scores de chaque fromage pour qu'ils aient tous le même score moyen.
+Cela compense le fait que le modèle apprend certains fromages mieux que d'autres.
+'''
+
 # Scores moyens 
 # À MODIFIER A POSTERIORI APRÈS CHAQUE NOUVELLE SOUMISSION
 
