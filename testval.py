@@ -1,3 +1,7 @@
+#########################
+## MODULES NÉCESSAIRES ##
+#########################
+
 import hydra
 from torch.utils.data import Dataset, DataLoader
 import os
@@ -7,6 +11,14 @@ import torch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+'''
+Fichier quasiment jamais utilsé. A servi pour évaluer l'effet de la correction des scores sur la validation
+au lieu de gacher du temps à faire des soumissions possiblement inutiles.
+'''
+
+#########################
+## FONCTION PRINCIPALE ##
+#########################
 
 class ValDataset(Dataset):
     def __init__(self, val_dataset_path, val_transform):

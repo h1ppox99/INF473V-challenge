@@ -1,6 +1,22 @@
+#########################
+## MODULES NÉCESSAIRES ##
+#########################
+
 import pandas as pd
 import os
 import shutil
+
+'''
+Ce fichier regroupe des fonctions utiles pour manipuler des fichiers CSV, des images, etc.
+On l'utilise notamment pour fusionner des submissions faites par les modèles et celle faite
+par OCR qui répond UNKNOWN si le score est inférieur au threshold (voir create_submission.py)
+
+'''
+
+
+###############
+## FONCTIONS ##
+###############
 
 
 # Load the CSV files
@@ -42,6 +58,9 @@ different_count = count_differences(df1, df2)
 # Print the result
 print(f"The number of different answers between the two CSV files is: {different_count}")
 '''
+
+
+
 '''
 def sort(df1):
     # On trie une copie de df1 et on crée un nouveau csv du meme nom avec sorted a la fin
@@ -53,6 +72,10 @@ def sort(df1):
 # Perform the sort
 sorted_df = sort(pd.read_csv('/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/submission_29_05_01.csv'))
 '''
+
+
+
+
 
 '''
 def move_files(src_file_path, dest_dir):
@@ -69,7 +92,10 @@ def move_files(src_file_path, dest_dir):
     shutil.copy(src_file_path, dest_file_path)
     print(f"Copied '{src_file_path}' to '{dest_file_path}'")
 
+'''
 
+
+'''
 def count_cheese_answers(file_path):
     try:
         # Load the submission data

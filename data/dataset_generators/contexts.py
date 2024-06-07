@@ -1,5 +1,15 @@
+#########################
+## MODULES NÉCESSAIRES ##
+#########################
+
+
 from pathlib import Path
 from tqdm import tqdm
+
+
+#########################
+## FONCTION PRINCIPALE ##
+#########################
 
 
 class ContextsPromptsDatasetGenerator:
@@ -89,6 +99,11 @@ class ContextsPromptsDatasetGenerator:
         } 
 
 
+        ############################################################################################################################
+        ## DESCRIPTIONS DE FROMAGES OBTENUES GRACE A guidedufromage.com (voir slides présentation + soutenance pour explications) ##
+        ############################################################################################################################
+
+
         fromages = {
             "EMMENTAL": "Emmental, a cheese with a yellow rind and a flexible yet firm ivory to yellow paste, with well-distributed, regular, and clear holes,",
             "FETA": "Feta, block or crumbled, with a creamy white interior, often without a rind,",
@@ -132,7 +147,7 @@ class ContextsPromptsDatasetGenerator:
 
         cheese_prompts = {}
 
-        # On génère les prompts pour chaque fromage : on a  ?? prompts générés par fromage
+        # On génère les prompts pour chaque fromage : on a 112 (À MODIFIER) prompts générés par fromage
         
         for fromage_maj, fromage in fromages.items():
             cheese_prompts[fromage_maj] = []

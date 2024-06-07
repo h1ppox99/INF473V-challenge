@@ -1,7 +1,12 @@
+#########################
+## MODULES NÉCESSAIRES ##
+#########################
+
 import os
 import re
 import pandas as pd
 import torch
+import sys
 from PIL import Image, ImageEnhance, ImageFilter
 from torch.utils.data import Dataset, DataLoader
 from fuzzywuzzy import fuzz
@@ -11,10 +16,18 @@ from omegaconf import DictConfig
 from text_recognition_easyocr import *
 import time
 
+sys.path.append('/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/ocr')
+from text_recognition_easyocr import *
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Average scores from your data
+#########################
+## FONCTION AUXILIAIRE ##
+#########################
+
+# Scores moyens 
+# À MODIFIER A POSTERIORI APRÈS CHAQUE NOUVELLE SOUMISSION
+
 average_scores = {
     "BEAUFORT": 0.0472,
     "BRIE DE MELUN": 0.0269,
@@ -55,28 +68,30 @@ average_scores = {
     "VACHERIN": 0.0135
 }
 
-
-
 def adjust_scores(preds, class_names, target_mean=0.027):
     """
-    Adjusts the scores in the preds tensor to normalize their means to the target_mean.
+    Ajuste les scores dans le tenseur preds pour normaliser leurs moyennes à target_mean.
     
     Args:
-    - preds (torch.Tensor): The tensor of predicted scores.
-    - class_names (list): The list of class names corresponding to the columns in preds.
-    - target_mean (float): The target mean value to adjust the scores to (default is 0.027).
+    - preds (torch.Tensor): Le tenseur des scores prédits.
+    - class_names (liste): La liste des noms de classes correspondant aux colonnes dans preds.
+    - target_mean (float): La valeur moyenne cible pour ajuster les scores (par défaut 0.027).
     
-    Returns:
-    - adjusted_preds (torch.Tensor): The tensor with adjusted scores.
+    Retourne:
+    - adjusted_preds (torch.Tensor): Le tenseur avec les scores ajustés.
     """
-    # Calculate the scaling factors
+    # Calcul des facteurs de mise à l'échelle
     scaling_factors = torch.tensor([target_mean / average_scores[class_name] for class_name in class_names], dtype=torch.float32, device=preds.device)
     
-    # Adjust the preds tensor
+    # Ajustement du tenseur preds
     adjusted_preds = preds * scaling_factors
     
     return adjusted_preds
 
+
+#####################
+## CLASSE DATASET ##
+#####################
 
 
 class TestDataset(Dataset):
@@ -84,8 +99,9 @@ class TestDataset(Dataset):
         self.test_dataset_path = test_dataset_path
         self.test_transform = test_transform
         images_list = os.listdir(self.test_dataset_path)
-        # Filter out non-image files
-        self.images_list = [image for image in images_list if image.lower().endswith((".jpg", ".jpeg", ".png"))]
+        # Filtrer les fichiers non-images
+        # Problèmes rencontrés avec les fichiers .DS_Store sur macOS
+        self.images_list = [image for image in images_list si image.lower().endswith((".jpg", ".jpeg", ".png"))]
 
     def __getitem__(self, idx):
         image_name = self.images_list[idx]
@@ -96,7 +112,6 @@ class TestDataset(Dataset):
 
     def __len__(self):
         return len(self.images_list)
-
 
 @hydra.main(config_path="configs/train", config_name="config")
 def create_submission(cfg):
@@ -109,23 +124,23 @@ def create_submission(cfg):
         num_workers=cfg.dataset.num_workers,
     )
 
-    # Load model and checkpoint
+    # Charger le modèle et le checkpoint
     model = hydra.utils.instantiate(cfg.model.instance).to(device)
     checkpoint = torch.load(cfg.checkpoint_path)
-    print(f"Loading model from checkpoint: {cfg.checkpoint_path}")
+    print(f"Chargement du modèle depuis le checkpoint: {cfg.checkpoint_path}")
     model.load_state_dict(checkpoint)
     
-    # Filter out non-directory entries
-    class_names = sorted([d for d in os.listdir(cfg.dataset.train_path) if os.path.isdir(os.path.join(cfg.dataset.train_path, d))])
-    print(f"Filtered class names: {class_names}")
+    # Filtrer les entrées non-répertoires
+    class_names = sorted([d for d in os.listdir(cfg.dataset.train_path) si os.path.isdir(os.path.join(cfg.dataset.train_path, d))])
+    print(f"Noms des classes filtrées: {class_names}")
 
-    # Create submission DataFrame
+    # Créer un DataFrame pour la soumission
     submission = pd.DataFrame(columns=["id", "label"])
 
     df1 = pd.read_csv('/users/eleves-a/2022/hippolyte.wallaert/Modal/INF473V-challenge/submissions/submission_ocr83_2.csv')
-    df1.set_index("id", inplace=True)  # Set index to 'id' for quick lookup
+    df1.set_index("id", inplace=True)  # Définir l'index sur 'id' pour une recherche rapide
     
-    # Dictionary to track the total scores and counts for each class
+    # Dictionnaire pour suivre les scores totaux et les comptes pour chaque classe
     model_class_scores = {class_name: 0.0 for class_name in class_names}
     model_class_counts = {class_name: 0 for class_name in class_names}
 
@@ -177,23 +192,22 @@ def create_submission(cfg):
                 submission,
                 pd.DataFrame({"id": image_names, "label": labels}),
             ],
-            ignore_index=True  # Ensure indices are continuous
+            ignore_index=True  # S'assurer que les indices sont continus
         )
 
-    # Compute the average score for each class using model predictions only
-    model_class_averages = {class_name: (model_class_scores[class_name] / model_class_counts[class_name]) if model_class_counts[class_name] > 0 else 0 for class_name in class_names}
+    # Calculer le score moyen pour chaque classe en utilisant uniquement les prédictions du modèle
+    model_class_averages = {class_name: (model_class_scores[class_name] / model_class_counts[class_name]) si model_class_counts[class_name] > 0 else 0 for class_name in class_names}
     
-    # Print the average scores for model predictions
+    # Imprimer les scores moyens pour les prédictions du modèle
     for class_name, average_score in model_class_averages.items():
-        print(f"Average score for {class_name} (model prediction): {average_score:.4f}")
+        print(f"Score moyen pour {class_name} (prédiction du modèle): {average_score:.4f}")
 
-    # Sort the submission DataFrame by 'id' to ensure sorted output
+    # Trier le DataFrame de soumission par 'id' pour garantir une sortie triée
     submission = submission.sort_values(by='id').reset_index(drop=True)
 
-    # Save the sorted submission DataFrame to a CSV file
+    # Sauvegarder le DataFrame de soumission trié dans un fichier CSV
     submission.to_csv(f"{cfg.root_dir}/submission_30_05_05.csv", index=False)
-    print(f"Submission saved to {cfg.root_dir}/submission_30_05_05.csv")
-
+    print(f"Soumission sauvegardée dans {cfg.root_dir}/submission_30_05_05.csv")
 
 if __name__ == "__main__":
     create_submission()

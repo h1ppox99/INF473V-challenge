@@ -1,3 +1,7 @@
+#########################
+## MODULES NÉCESSAIRES ##
+#########################
+
 import os
 import re
 import easyocr
@@ -10,6 +14,12 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, confusion_matrix
 from PIL import ImageEnhance
 import time
+
+
+##########################
+## FONCTIONS AUXILAIRES ##
+##########################
+
 
 def preprocess(image, resize_factor=1.5):
     image = image.resize([int(dim * resize_factor) for dim in image.size], Image.LANCZOS)
@@ -36,6 +46,10 @@ class TextRecognition:
         return combined_text if combined_text.strip() else ""
 
     '''
+    Méthode abandonnée : l'idée était de ne pas comparer le texte brut mais de comparer les n-grams des
+    mots-clés des fromages avec les n-grams du texte extrait de l'image
+    
+
     def generate_ngrams(self, text, n):
         words = text.split()
         ngrams = [' '.join(words[i:i+n]) for i in range(len(words)-n+1)]
