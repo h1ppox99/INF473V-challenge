@@ -14,7 +14,11 @@ import asyncio
 import aiofiles
 import random
 
+'''
+Ce script permet de générer des images à partir d'images réelles (val set) et de prompt textuels.
 
+
+'''
 
 async def load_labels(filepath):
     '''

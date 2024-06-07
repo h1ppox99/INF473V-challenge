@@ -4,6 +4,10 @@ import hydra
 from tqdm import tqdm
 from omegaconf import DictConfig, OmegaConf
 
+
+'''
+Ce script permet de tester plusieurs hyperparamètres du modèle en utilisant la librairie wandb.'''
+
 # Sweep configuration
 sweep_config = {
     'method': 'bayes',

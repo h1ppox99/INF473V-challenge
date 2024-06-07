@@ -3,9 +3,9 @@ import wandb
 import hydra
 from tqdm import tqdm
 
-####
-# Add the following line in configs
-#init_model_weights_path: 
+'''
+Ce script permet d'entraîner un modèle de classification d'images de fromages en chargeant un modèle déjà entrainé
+'''
 
 
 def load_and_modify_weights(model, init_weights_path):

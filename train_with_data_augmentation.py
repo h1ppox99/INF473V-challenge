@@ -3,6 +3,9 @@ import wandb
 import hydra
 from tqdm import tqdm
 
+'''
+Utilisé pour la data_augmentation'''
+
 
 
 @hydra.main(config_path="configs/train", config_name="config")

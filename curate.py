@@ -7,59 +7,6 @@ import os
 import yaml
 import torch.nn.functional as F
 
-
-@hydra.main(config_path='configs/dataset_curator', config_name='config')
-def moveback(cfg):
-    # Move the images back to their original folders
-    curated_folder = os.path.join(cfg.data_dir, 'train', 'curated')
-    labels = [name for name in os.listdir(curated_folder) if os.path.isdir(os.path.join(cfg.images_dir, name))]
-    for label in labels:
-        curated_folder = os.path.join(cfg.data_dir, 'train', 'curated', label)
-        curated_files = os.listdir(curated_folder)
-        for curated_file in curated_files:
-            os.rename(os.path.join(curated_folder, curated_file), os.path.join(cfg.images_dir, label, curated_file))
-        os.rmdir(curated_folder)
-                
-
-
-
-
-
-
-@hydra.main(config_path='configs/dataset_curator', config_name='config')
-def export_text_from_val(cfg):
-    # Load the CLIP model
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model, preprocess = clip.load('ViT-B/32', device=device)
-    with open(cfg.cheese_description, 'r') as file:
-        cheese_description = yaml.safe_load(file)
-
-    # Derive labels from the names of subdirectories in the specified images directory
-    labels = [name for name in os.listdir(cfg.images_dir) if os.path.isdir(os.path.join(cfg.images_dir, name))]
-    text_inputs = torch.cat([clip.tokenize(f"a photo of a {cheese_description[label]} cheese") for label in labels]).to(device)
-    
-    # Use the validation set to curate the training set
-    # Process the images in the validation set
-    val_input = os.path.join(cfg.data_dir, 'val')
-    val_labels = [name for name in os.listdir(val_input) if os.path.isdir(os.path.join(val_input, name))]
-
-    # Encode the validation images once, outside of the image loop
-    with torch.no_grad():
-        val_image_features = []
-        for label in val_labels:
-            label_features = []
-            subfolder_path = os.path.join(val_input, label)
-            image_files = [f for f in os.listdir(subfolder_path) if f.endswith(('.png', '.jpg', '.jpeg'))]
-            for image_file in image_files:
-                image_path = os.path.join(subfolder_path, image_file)
-                image = preprocess(Image.open(image_path)).unsqueeze(0).to(device)
-                image_features = model.encode_image(image)
-                label_features.append(image_features)
-            # Average the image features for the label
-            label_features = torch.stack(label_features).mean(dim=0)
-            val_image_features.append(label_features)
-        val_image_features = torch.cat(val_image_features)
-    # create phrases from val_image_features
     
 @hydra.main(config_path='configs/dataset_curator', config_name='config')
 def curate2(cfg):
