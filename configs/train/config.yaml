@@ -25,3 +25,5 @@ hydra:
     dir: outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}/
   job:
     chdir: true
+  
+init_model_weights_path: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/dataset/checkpoints/DINOV2_IPA3+IPA7.pt"

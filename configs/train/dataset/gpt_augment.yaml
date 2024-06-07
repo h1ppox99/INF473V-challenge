@@ -5,7 +5,7 @@ defaults:
 name: gpt_augment
 num_classes: 37
 batch_size: 128
-num_workers: 8
+num_workers: 12
 train_path: ${data_dir}/train/gpt_prompts
 # train_path: ${data_dir}/val
 real_images_val_path: ${data_dir}/val
