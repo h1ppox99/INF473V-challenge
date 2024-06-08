@@ -1,0 +1,32 @@
+contexts:
+  "au centre d'une table de cuisine rustique": "on a rustic kitchen table"
+  "sur une planche en bois": "on a wooden board"
+  "sur une ardoise": "on a black slate"
+  "sur un étalage de marché en bois": "on a wooden market stall"
+  "dans une assiette en céramique": "on a ceramic plate"
+  "dans une assiette émaillée": "on an enamel plate"
+  "dans une boîte en bois avec étiquette claire": "in a wooden open packaging"
+  "dans un emballage en papier": "in a paper wrapping"
+  "dans un emballage en plastique": "in a transparent plastic wrapping"
+  "dans un emballage en papier kraft": "in an open kraft paper wrapping showing the cheese"
+  "dans un emballage en carton": "in a cardboard packaging showing the cheese"
+  "à côté d'autres fromages": "next to other cheeses"
+  
+
+fonds:
+  "sur fond blanc": "on a white background"
+  "sur fond noir": "on a black background"
+  "dans un paysage naturel de campagne": "in a countryside landscape"
+  "dans une cuisine rustique": "in a rustic kitchen"
+  # "dans un marché en plein air, avec des étals en bois et des parasols colorés": "in an outdoor market"
+  "dans une pièce éclairée": "in a well-lit room"
+  "contre un vieux mur de briques": "against a brick wall"
+  "dans une fromagerie": "in a cheese shop"
+
+cadrages:
+  "en gros plan": "close-up shot"
+  "avec un cadrage très large": "very wide shot"
+  "de haut": "from above view"
+  "de côté": "from top-left view"
+  "de face": "bottom-right wiew"
+

@@ -30,7 +30,7 @@ class SDXLLightiningGenerator:
         )
         self.pipe.set_progress_bar_config(disable=True)
         self.num_inference_steps = 4
-        self.guidance_scale = 0
+        self.guidance_scale = 2
 
     def generate(self, prompts):
         images = self.pipe(

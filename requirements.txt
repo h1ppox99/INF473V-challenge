@@ -6,3 +6,7 @@ einops
 diffusers
 transformers
 pandas
+clip
+pyyaml
+git+https://github.com/tencent-ailab/IP-Adapter.git
+asyncio

@@ -1,0 +1,33 @@
+root_dir: ${hydra:runtime.cwd}
+
+# contexts_path: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/IPA/contexts_list.yaml"
+contexts_path: ${root_dir}/IPAdapter_files/contexts_list.yaml
+cheese_path: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/dataset/IPA_2"
+output_dir: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/dataset/train/IPA_10"
+cheese_description: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/cheese_description.yaml" 
+
+base_model_path: "SG161222/Realistic_Vision_V4.0_noVAE"
+vae_model_path: "stabilityai/sd-vae-ft-mse"
+image_encoder_path: "${root_dir}/IPA/models/image_encoder"
+ip_ckpt: "${root_dir}/IPA/models/ip-adapter-plus_sd15.bin"
+
+labels: "${root_dir}/list_of_cheese.txt"
+
+num_images_per_label: 500
+
+model: 
+  instance:
+    _target_: ../models.dinov2.DinoV2Finetune
+    num_classes: 37
+    frozen: True
+    unfreeze_last_layer: True
+
+
+
+checkpoint_path: ${root_dir}/dataset/checkpoints/DINOV2_IPA3+7+8.pt
+guidance_scale: 20
+scale: 0.5
+inference_step: 30
+
+#IPA3 : guidance = 15. scale = 0.6, inference step = 50
+#IPA 7 : guidance = 20, scale = 0.5, inference step = 30

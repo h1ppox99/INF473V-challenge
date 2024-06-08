@@ -1,13 +1,13 @@
 defaults:
   - model: dinov2
-  - dataset: simple_prompts
+  - dataset: IPA
   - optim: adamw
   - loss_fn: cross_entropy
 
-epochs: 20
+epochs: 17
 
 datamodule:
-  _target_: data.datamodule.DataModule
+  _target_: data.datamoduleaugment.DataModuleAugment #modifier
   train_dataset_path: ${dataset.train_path}
   real_images_val_path: ${dataset.real_images_val_path}
   train_transform: ${dataset.train_transform}
@@ -17,7 +17,7 @@ datamodule:
 
 data_dir: ${root_dir}/dataset
 root_dir:  ${hydra:runtime.cwd}
-checkpoint_path: ${root_dir}/checkpoints/${experiment_name}.pt
+checkpoint_path: ${root_dir}/dataset/checkpoints/${experiment_name}.pt
 
 experiment_name: ${model.name}_${dataset.name}
 hydra:
@@ -25,3 +25,5 @@ hydra:
     dir: outputs/${hydra.job.name}/${now:%Y-%m-%d_%H-%M-%S}/
   job:
     chdir: true
+  
+init_model_weights_path: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-challenge-1/dataset/checkpoints/DINOV2_IPA3+IPA7.pt"
