@@ -1,3 +1,17 @@
+## EXPLICATION DE LA BRANCHE HIPPO
+
+1) voir le fichier contexts dans data/dataset_generators/
+2) voir le folder ocr
+3) voir create_submition (surtout la fonction auxiliaire)
+4) voir éventuellement les fichiers : 
+- merge_submissions
+- merge_model
+
+
+###########################################################################
+###########################################################################
+
+
 # Cheese Classification challenge
 This codebase allows you to jumpstart the INF473V challenge.
 The goal of this channel is to create a cheese classifier without any real training data.
@@ -5,6 +19,12 @@ You will need to create your own training data from tools such as Stable Diffusi
 
 ## Instalation
 
+Cloning the repo:
+```
+git clone git@github.com:nicolas-dufour/cheese_classification_challenge.git
+cd cheese_classification_challenge
+```
+Install dependencies:
 ```
 conda create -n cheese_challenge python=3.10
 conda activate cheese_challenge
@@ -48,6 +68,12 @@ You can then run
 python generate.py dataset_generator=your_new_generator
 ```
 
+### VRAM issues
+If you have vram issues either use smaller diffusion models (SD 1.5) or try CPU offloading (much slower). For example for sdxl lightning you can do
+
+```
+python generate.py image.generator.use_cpu_offload=true
+
 ## Create submition
 To create a submition file, you can run 
 ```
@@ -55,5 +81,3 @@ python create_submition.py experiment_name="name_of_the_exp_you_want_to_score" m
 ```
 
 Make sure to specify the name of the checkpoint you want to score and to have the right model config
-
-

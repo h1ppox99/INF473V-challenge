@@ -1,3 +1,7 @@
+##############################################
+## CODE INCHANGÉ PAR RAPPORT AU GIT DE BASE ##
+##############################################
+
 import torch
 import wandb
 import hydra
