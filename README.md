@@ -28,6 +28,19 @@ Install dependencies:
 ```
 conda create -n cheese_challenge python=3.10
 conda activate cheese_challenge
+```
+### Install requirements:
+##### Install Pytorch:
+If CUDA>=12.0:
+```
+pip install torch torchvision
+```
+If CUDA == 11.8
+```
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118 
+```
+Then install the rest of the requirements
+```
 pip install -r requirements.txt
 ```
 
@@ -72,7 +85,8 @@ python generate.py dataset_generator=your_new_generator
 If you have vram issues either use smaller diffusion models (SD 1.5) or try CPU offloading (much slower). For example for sdxl lightning you can do
 
 ```
-python generate.py image.generator.use_cpu_offload=true
+python generate.py image_generator.use_cpu_offload=true
+```
 
 ## Create submition
 To create a submition file, you can run 
