@@ -1,4 +1,6 @@
-# import necessary libraries
+############################################
+### Génération d'images avec IPAdapter  ###
+############################################
 import torch
 from diffusers import (StableDiffusionPipeline, 
                        StableDiffusionImg2ImgPipeline, StableDiffusionInpaintPipelineLegacy, 

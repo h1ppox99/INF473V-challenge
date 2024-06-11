@@ -1,3 +1,6 @@
+#########################
+## MODULES NÉCESSAIRES ##
+#########################
 import hydra
 from omegaconf import OmegaConf
 import clip
@@ -7,6 +10,11 @@ import os
 import yaml
 import torch.nn.functional as F
 
+
+
+##########################
+## FONCTION DE CURATION ##
+##########################
     
 @hydra.main(config_path='configs/dataset_curator', config_name='config')
 def curate2(cfg):
