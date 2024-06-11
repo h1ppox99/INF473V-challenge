@@ -8,8 +8,8 @@ cheese_description: "/users/eleves-b/2022/edouard.rabasse/Documents/INF473V-chal
 
 base_model_path: "SG161222/Realistic_Vision_V4.0_noVAE"
 vae_model_path: "stabilityai/sd-vae-ft-mse"
-image_encoder_path: "${root_dir}/IPA/models/image_encoder"
-ip_ckpt: "${root_dir}/IPA/models/ip-adapter-plus_sd15.bin"
+image_encoder_path: "${root_dir}/IP-Adapter/models/image_encoder"
+ip_ckpt: "${root_dir}/IP-Adapter/models/ip-adapter-plus_sd15.bin"
 
 labels: "${root_dir}/list_of_cheese.txt"
 
