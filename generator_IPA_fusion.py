@@ -16,6 +16,11 @@ import asyncio
 import aiofiles
 import random
 
+'''
+Nous avons adapté l'implémentation de IPAdapter.
+
+'''
+
 async def load_labels(filepath):
     labels = []
     async with aiofiles.open(filepath, 'r') as f:
