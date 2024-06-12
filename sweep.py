@@ -11,7 +11,8 @@ from omegaconf import DictConfig, OmegaConf
 
 
 '''
-Ce script permet de tester plusieurs hyperparamètres du modèle en utilisant la librairie wandb.'''
+Ce script permet de tester plusieurs hyperparamètres du modèle en utilisant la librairie wandb.
+Nous avons adapté le code fourni pour l'utiliser avec les sweep'''
 
 # Sweep configuration
 sweep_config = {
