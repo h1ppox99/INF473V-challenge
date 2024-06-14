@@ -1,5 +1,6 @@
 ############################################
-### Génération d'images avec IPAdapter  ###
+### Génération d'images avec IPAdapter   ###
+###  Voir le README pour les détails     ###
 ############################################
 import torch
 from diffusers import (StableDiffusionPipeline, 

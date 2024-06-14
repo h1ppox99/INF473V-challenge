@@ -1,3 +1,7 @@
+Les modèles pour IPAdapter sont trop volumineux pour être joints dans ce dossier zip. Les instructions d'installation peuvent être trouvées plus bas (ou sur le github https://github.com/tencent-ailab/IP-Adapter)
+
+# Hippolyte
+
 
 1) voir le fichier contexts dans data/dataset_generators/
 2) voir le folder ocr
@@ -10,16 +14,17 @@
 ###########################################################################
 ###########################################################################
 
-# Explication des scripts
+# Explication des scripts Edouard
 
 ## curate.py
 Ce script permet de supprimer les images générées qui sont peu semblables à celles du val set. On utilise pour cela clip.
 
-On peut configurer le dossier à curer dans configs/curate.
+On peut choisir le dossier à curer dans configs/curate.
 
 
 
-
+## data augmentation
+les transformations ajoutées sont dans configs\train\dataset\train_transform\augment.yaml
 
 ## generator_IPA.py
 Ce script génère des images à partir d'images réelles (val) et de descriptions.
@@ -102,8 +107,10 @@ class IPAdapterPlusv2(IPAdapter):
    
 
 
-#################################
-#################################
+________________________________
+### Readme de base
+________________________________
+
 
 
 # Cheese Classification challenge
